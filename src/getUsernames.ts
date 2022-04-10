@@ -1,13 +1,15 @@
-import { SuggestNameDto } from "./dtos/suggestName.dto";
-import { generateRandomSuggestionsWithNumbers } from "./generateRandomSuggestionsWithNumbers";
-import { removeElementsRandomlyFromArray } from "./removeElementsRandomlyFromArray";
+import { addNameWithPrefixOrSuffix } from './addNameWithPrefixOrSuffix';
+import { SuggestNameDto } from './dtos/suggestName.dto';
+import { generateRandomSuggestionsWithNumbers } from './generateRandomSuggestionsWithNumbers';
+import { removeElementsRandomlyFromArray } from './removeElementsRandomlyFromArray';
 import { shuffleArray } from './shuffleArray';
 
 export const getUsernames = ({
   names = [],
   symbols = ['_', '.'],
   suggestionLimit = 20,
-  shuffleSuggestions = false
+  shuffleSuggestions = false,
+  namePrefix,
 }: SuggestNameDto) => {
   const elementsNumber = names.length;
 
@@ -22,7 +24,7 @@ export const getUsernames = ({
   const iterationsMax = elementsNumber - 1;
   // For each iteration of loop, can generate new elements
   const forceRandomGenerationsPerIteration = Math.floor(
-    Math.abs(forceRandomGenerations) / (iterationsMax || 1),
+    Math.abs(forceRandomGenerations) / (iterationsMax || 1)
   );
 
   // * if Math.abs(forceRandomGenerations) / (iterationsMax || 1) is float,
@@ -57,8 +59,8 @@ export const getUsernames = ({
 
       const randomSuggestions = generateRandomSuggestionsWithNumbers({
         quantity: length,
-        domain: iterations
-      })
+        domain: iterations,
+      });
       iterations = iterations.concat(randomSuggestions);
     }
 
@@ -68,10 +70,20 @@ export const getUsernames = ({
 
   // Remove elements to satisfy suggestionLimit parameter
   if (forceRandomGenerations > 0) {
-    arrayResults = removeElementsRandomlyFromArray(arrayResults, Math.abs(forceRandomGenerations))
+    arrayResults = removeElementsRandomlyFromArray(
+      arrayResults,
+      Math.abs(forceRandomGenerations)
+    );
   }
 
-  if(shuffleSuggestions) return shuffleArray(arrayResults)
+  arrayResults = arrayResults.map((name) =>
+    addNameWithPrefixOrSuffix({
+      name,
+      prefix: namePrefix,
+    })
+  );
+
+  if (shuffleSuggestions) return shuffleArray(arrayResults);
 
   return arrayResults;
-}
+};

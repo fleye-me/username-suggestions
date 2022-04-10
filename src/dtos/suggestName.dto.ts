@@ -3,4 +3,5 @@ export class SuggestNameDto {
   symbols?: string[];
   suggestionLimit?: number;
   shuffleSuggestions?: boolean;
+  namePrefix?: string;
 }
