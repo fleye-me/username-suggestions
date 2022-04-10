@@ -3,15 +3,25 @@ import { SuggestNameDto } from './dtos/suggestName.dto';
 import { generateRandomSuggestionsWithNumbers } from './generateRandomSuggestionsWithNumbers';
 import { removeElementsRandomlyFromArray } from './removeElementsRandomlyFromArray';
 import { shuffleArray } from './shuffleArray';
+import { splitStringInTwo } from './splitStringInTwo';
 
 export const getUsernames = ({
-  names = [],
+  names: _names = [],
   symbols = ['_', '.'],
   suggestionLimit = 20,
   shuffleSuggestions = false,
   namePrefix,
 }: SuggestNameDto) => {
-  const elementsNumber = names.length;
+  let names = _names;
+  let elementsNumber = names.length;
+
+  if(elementsNumber == 0) return [];
+
+  if(elementsNumber === 1) {
+    const uniqueName = names[0];
+    names = splitStringInTwo(uniqueName);
+    elementsNumber = names.length
+  }
 
   // Number of combinations using only name elements
   const combinationsNumber = elementsNumber * (elementsNumber - 1);
