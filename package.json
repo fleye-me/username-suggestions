@@ -1,6 +1,6 @@
 {
   "name": "@fleye-me/username-suggestions",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "Algorithm to generate username",
   "main": "dist/index.js",
   "license": "MIT",
